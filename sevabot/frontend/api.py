@@ -193,10 +193,10 @@ class JenkinsNotifier(SendMessage):
             logger.error("Jenkins did not post a valid HTTP POST payload. Check the logs for further info.")
             return "Jenkins bad notification: Could not read HTTP POST data"
         # Filter out completed status, lots of unneeded noise
-        if payload['build']['phase'] != 'COMPLETED':
+        if payload['build']['phase'] != 'COMPLETED' && payload['build']['phase'] != 'STARTED':
             if payload['build'].get('status') == 'SUCCESS':
                 msg = u'Project: %s build #%d %s Status: %s - (sun) - %s\n' % (payload['name'], payload['build']['number'], payload['build']['phase'], payload['build']['status'], payload['build']['full_url'])
-            elif payload['build']['status'] == 'FAILURE':
+            elif payload['build'].get('status') == 'FAILURE':
                 msg = u'Project: %s build #%d %s Status: %s - (rain) - %s\n' % (payload['name'], payload['build']['number'], payload['build']['phase'], payload['build']['status'], payload['build']['full_url'])
             else:
                 msg = u'Project: %s build #%d %s Status: %s - - %s\n' % (payload['name'], payload['build']['number'], payload['build']['phase'], payload['build']['status'], payload['build']['full_url'])
